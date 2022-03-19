@@ -28,6 +28,7 @@
 /*specify the tokens needed*/
 %start beginning
 %token BODY BEGINNING TO END INPUT TERMINATE OTHER
+%token INTEGER
 %token ADD MOVE STRING
 %token IDENTIFIER
 %token CAPACITY
@@ -39,10 +40,15 @@
 
 %%
 
-beginning:      BEGINNING TERMINATE declare {}
+beginning:      BEGINNING TERMINATE  declaration {}
+                ;
+
+declaration:    declaration declare {}
+                | {}
                 ;
 
 declare:        CAPACITY IDENTIFIER TERMINATE {}
+                | {}
                 ;
 
 body:           BODY TERMINATE functions {}
@@ -58,6 +64,7 @@ function:       add {}
                 ;
 
 output:         OUTPUT outputs {}
+                ;
 
 add:            ADD IDENTIFIER TO IDENTIFIER TERMINATE {}
                 ;

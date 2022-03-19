@@ -10,8 +10,8 @@
 %option noyywrap
 
 %%
-
-"BODY"								{return (BODY);}
+[\n\t ]+     						{}
+"BODY"								{printf("%s the user typed\n",yytext);return (BODY);}
 "BEGINNING"						{return (BEGINNING);}
 "TO"									{return (TO);}
 "END"									{return (END);}
@@ -19,18 +19,12 @@
 "ADD"									{return (ADD);}
 "INPUT"								{return (INPUT);}
 "PRINT"								{return (OUTPUT);}
+[xX]+									{yylval.cap=strlen(yytext); return (CAPACITY);}
+[A-Za-z][\-a-zA-Z0-9]*	{yylval.identifier = yytext; return (IDENTIFIER);}
+\.									{return (TERMINATE);}
 \"([^\\\"]|\\.)*\"		{return (STRING);}
-[xX]+									{yylval.cap=strlen(yytext); return CAPACITY;}
-[0-9]+                {yylval.num=atoi(yytext); return INTEGER; }
-[\t ]+     						{ };
-[A-Za-z][\-a-zA-Z0-9]*	{yylval.identifier = yytext; return IDENTIFIER;}
+[0-9]+                {yylval.num=atoi(yytext); return (INTEGER); }
 ;											{return (SEMICOLON);}
-\.										{return TERMINATE;}
 .											return 0;
 
 %%
-
-int main()
-{
-	yylex();
-}

@@ -198,13 +198,14 @@ typedef
 #define	INPUT	262
 #define	TERMINATE	263
 #define	OTHER	264
-#define	ADD	265
-#define	MOVE	266
-#define	STRING	267
-#define	IDENTIFIER	268
-#define	CAPACITY	269
-#define	SEMICOLON	270
-#define	OUTPUT	271
+#define	INTEGER	265
+#define	ADD	266
+#define	MOVE	267
+#define	STRING	268
+#define	IDENTIFIER	269
+#define	CAPACITY	270
+#define	SEMICOLON	271
+#define	OUTPUT	272
 
 
 #line 169 "/usr/share/bison++/bison.h"
@@ -260,6 +261,7 @@ static const int END;
 static const int INPUT;
 static const int TERMINATE;
 static const int OTHER;
+static const int INTEGER;
 static const int ADD;
 static const int MOVE;
 static const int STRING;
@@ -282,13 +284,14 @@ static const int OUTPUT;
 	,INPUT=262
 	,TERMINATE=263
 	,OTHER=264
-	,ADD=265
-	,MOVE=266
-	,STRING=267
-	,IDENTIFIER=268
-	,CAPACITY=269
-	,SEMICOLON=270
-	,OUTPUT=271
+	,INTEGER=265
+	,ADD=266
+	,MOVE=267
+	,STRING=268
+	,IDENTIFIER=269
+	,CAPACITY=270
+	,SEMICOLON=271
+	,OUTPUT=272
 
 
 #line 215 "/usr/share/bison++/bison.h"
