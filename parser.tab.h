@@ -13,7 +13,7 @@
 
  #line 8 "/usr/share/bison++/bison.h"
 
-#line 22 "parser.y"
+#line 34 "parser.y"
 typedef union{
     int num;
     char* identifier;
@@ -202,8 +202,8 @@ typedef
 #define	ADD	266
 #define	MOVE	267
 #define	STRING	268
-#define	IDENTIFIER	269
-#define	CAPACITY	270
+#define	CAPACITY	269
+#define	IDENTIFIER	270
 #define	SEMICOLON	271
 #define	OUTPUT	272
 
@@ -265,8 +265,8 @@ static const int INTEGER;
 static const int ADD;
 static const int MOVE;
 static const int STRING;
-static const int IDENTIFIER;
 static const int CAPACITY;
+static const int IDENTIFIER;
 static const int SEMICOLON;
 static const int OUTPUT;
 
@@ -288,8 +288,8 @@ static const int OUTPUT;
 	,ADD=266
 	,MOVE=267
 	,STRING=268
-	,IDENTIFIER=269
-	,CAPACITY=270
+	,CAPACITY=269
+	,IDENTIFIER=270
 	,SEMICOLON=271
 	,OUTPUT=272
 

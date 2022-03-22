@@ -105,6 +105,7 @@ Maintained by Magnus Ekdahl <magnus@debian.org>
   #include <string.h>
   #include <stdlib.h>
   #include <stdbool.h>
+  #define MAX 60
 
   extern int yylex();
 	extern int yyparse();
@@ -113,10 +114,21 @@ Maintained by Magnus Ekdahl <magnus@debian.org>
   extern int yylex(void);
 
 
+
+  /* function declaration */
+  void add_variable(char *varName, const int size);
+  void remove_delimiter(char *variable);
   void yyerror(char *);
+  bool check_var_def(char *identifer);
+  void get_identifier(char *identifer);
+
+  /*public variables*/
+  char identifierArray[MAX][32];
+  int sizes[MAX];
+  int arrayCounter = 0;
 
 
-#line 22 "parser.y"
+#line 34 "parser.y"
 typedef union{
     int num;
     char* identifier;
@@ -332,8 +344,8 @@ typedef
 #define	ADD	266
 #define	MOVE	267
 #define	STRING	268
-#define	IDENTIFIER	269
-#define	CAPACITY	270
+#define	CAPACITY	269
+#define	IDENTIFIER	270
 #define	SEMICOLON	271
 #define	OUTPUT	272
 
@@ -396,8 +408,8 @@ static const int INTEGER;
 static const int ADD;
 static const int MOVE;
 static const int STRING;
-static const int IDENTIFIER;
 static const int CAPACITY;
+static const int IDENTIFIER;
 static const int SEMICOLON;
 static const int OUTPUT;
 
@@ -419,8 +431,8 @@ enum YY_parse_ENUM_TOKEN { YY_parse_NULL_TOKEN=0
 	,ADD=266
 	,MOVE=267
 	,STRING=268
-	,IDENTIFIER=269
-	,CAPACITY=270
+	,CAPACITY=269
+	,IDENTIFIER=270
 	,SEMICOLON=271
 	,OUTPUT=272
 
@@ -470,8 +482,8 @@ const int YY_parse_CLASS::INTEGER=265;
 const int YY_parse_CLASS::ADD=266;
 const int YY_parse_CLASS::MOVE=267;
 const int YY_parse_CLASS::STRING=268;
-const int YY_parse_CLASS::IDENTIFIER=269;
-const int YY_parse_CLASS::CAPACITY=270;
+const int YY_parse_CLASS::CAPACITY=269;
+const int YY_parse_CLASS::IDENTIFIER=270;
 const int YY_parse_CLASS::SEMICOLON=271;
 const int YY_parse_CLASS::OUTPUT=272;
 
@@ -492,11 +504,11 @@ YY_parse_CONSTRUCTOR_CODE;
  #line 352 "/usr/share/bison++/bison.cc"
 
 
-#define	YYFINAL		10
+#define	YYFINAL		50
 #define	YYFLAG		-32768
 #define	YYNTBASE	18
 
-#define YYTRANSLATE(x) ((unsigned)(x) <= 272 ? yytranslate[x] : 21)
+#define YYTRANSLATE(x) ((unsigned)(x) <= 272 ? yytranslate[x] : 32)
 
 static const char yytranslate[] = {     0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -531,74 +543,93 @@ static const char yytranslate[] = {     0,
 
 #if YY_parse_DEBUG != 0
 static const short yyprhs[] = {     0,
-     0,     4,     7,     8,    12,    13,    17,    20,    22,    24,
-    26,    28,    31,    37,    43,    47,    51,    54,    57,    60,
-    63,    67
+     0,     4,     8,    11,    12,    16,    20,    23,    24,    26,
+    28,    30,    32,    35,    41,    47,    51,    55,    58,    61,
+    64,    67,    71
 };
 
-static const short yyrhs[] = {     4,
-     8,    19,     0,    19,    20,     0,     0,    15,    14,     8,
-     0,     0,     3,     8,     0,     0,     0,     0,     0,     0,
-     0,     0,     0,     0,     0,     0,     0,    17,     0,     0,
-    11,    14,     5,    14,     8,     0,    12,    14,     5,    14,
-     8,     0,    13,    16,     0,     0,    14,    16,     0,     0,
-    13,     8,     0,    14,     8,     0,     7,     0,     0,    14,
-     8,     0,    14,    16,     0,     0,     6,     8,     0
+static const short yyrhs[] = {    19,
+    22,    31,     0,     4,     8,    20,     0,    21,    20,     0,
+     0,    14,    15,     8,     0,     3,     8,    23,     0,    23,
+    24,     0,     0,    26,     0,    27,     0,    29,     0,    25,
+     0,    17,    28,     0,    11,    15,     5,    15,     8,     0,
+    12,    15,     5,    15,     8,     0,    13,    16,    28,     0,
+    15,    16,    28,     0,    13,     8,     0,    15,     8,     0,
+     7,    30,     0,    15,     8,     0,    15,    16,    30,     0,
+     6,     8,     0
 };
 
 #endif
 
 #if (YY_parse_DEBUG != 0) || defined(YY_parse_ERROR_VERBOSE) 
 static const short yyrline[] = { 0,
-    43,    46,    47,    50,    51,    54,    57,    60,    61,    62,
-    63,    66,    69,    72,    75,    76,    77,    78,    81,    84,
-    85,    88
+    51,    54,    57,    58,    61,    64,    67,    68,    71,    72,
+    73,    74,    77,    80,    83,    86,    87,    88,    89,    92,
+    95,    96,    99
 };
 
 static const char * const yytname[] = {   "$","error","$illegal.","BODY","BEGINNING",
-"TO","END","INPUT","TERMINATE","OTHER","INTEGER","ADD","MOVE","STRING","IDENTIFIER",
-"CAPACITY","SEMICOLON","OUTPUT","beginning","declaration","declare",""
+"TO","END","INPUT","TERMINATE","OTHER","INTEGER","ADD","MOVE","STRING","CAPACITY",
+"IDENTIFIER","SEMICOLON","OUTPUT","prog","beginning","declaration","declare",
+"body","functions","function","output","add","move","outputs","input","inputfunc",
+"end",""
 };
 #endif
 
 static const short yyr1[] = {     0,
-    18,    19,    19,    20,    20,    -1,    -1,    -1,    -1,    -1,
-    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
-    -1,    -1
+    18,    19,    20,    20,    21,    22,    23,    23,    24,    24,
+    24,    24,    25,    26,    27,    28,    28,    28,    28,    29,
+    30,    30,    31
 };
 
 static const short yyr2[] = {     0,
-     3,     2,     0,     3,     0,     3,     2,     1,     1,     1,
-     1,     2,     5,     5,     3,     3,     2,     2,     2,     2,
-     3,     2
+     3,     3,     2,     0,     3,     3,     2,     0,     1,     1,
+     1,     1,     2,     5,     5,     3,     3,     2,     2,     2,
+     2,     3,     2
 };
 
 static const short yydefact[] = {     0,
-     0,     3,     1,     0,     2,     0,     4,     0,     0,     0
+     0,     0,     4,     0,     0,     0,     2,     4,     8,     0,
+     1,     0,     3,     6,    23,     5,     0,     0,     0,     0,
+     7,    12,     9,    10,    11,     0,    20,     0,     0,     0,
+     0,    13,    21,     0,     0,     0,    18,     0,    19,     0,
+    22,     0,     0,    16,    17,    14,    15,     0,     0,     0
 };
 
-static const short yydefgoto[] = {     8,
-     3,     5
+static const short yydefgoto[] = {    48,
+     2,     7,     8,     5,    14,    21,    22,    23,    24,    32,
+    25,    27,    11
 };
 
-static const short yypact[] = {    -4,
-    -7,-32768,   -13,   -11,-32768,    -3,-32768,     4,     6,-32768
+static const short yypact[] = {    -3,
+    -6,     5,     6,     1,     7,     8,-32768,     6,-32768,     4,
+-32768,    13,-32768,    -7,-32768,-32768,     9,    10,    11,     3,
+-32768,-32768,-32768,-32768,-32768,    -5,-32768,    17,    22,    -2,
+    -1,-32768,-32768,     9,    14,    15,-32768,     3,-32768,     3,
+-32768,    20,    23,-32768,-32768,-32768,-32768,    32,    33,-32768
 };
 
 static const short yypgoto[] = {-32768,
--32768,-32768
+-32768,    26,-32768,-32768,-32768,-32768,-32768,-32768,-32768,   -21,
+-32768,     2,-32768
 };
 
 
-#define	YYLAST		6
+#define	YYLAST		36
 
 
-static const short yytable[] = {     1,
-     2,     4,     6,     9,     7,    10
+static const short yytable[] = {    17,
+     1,     3,    33,    18,    19,    37,    39,     4,     9,    20,
+    34,    15,    10,    38,    40,    30,    44,    31,    45,     6,
+    16,    35,    12,    26,    28,    29,    36,    46,    42,    43,
+    47,    49,    50,    13,     0,    41
 };
 
-static const short yycheck[] = {     4,
-     8,    15,    14,     0,     8,     0
+static const short yycheck[] = {     7,
+     4,     8,     8,    11,    12,     8,     8,     3,     8,    17,
+    16,     8,     6,    16,    16,    13,    38,    15,    40,    14,
+     8,     5,    15,    15,    15,    15,     5,     8,    15,    15,
+     8,     0,     0,     8,    -1,    34
 };
 
 #line 352 "/usr/share/bison++/bison.cc"
@@ -1095,92 +1126,96 @@ YYLABEL(yyreduce)
   switch (yyn) {
 
 case 1:
-#line 43 "parser.y"
-{;
-    break;}
-case 2:
-#line 46 "parser.y"
-{;
-    break;}
-case 3:
-#line 47 "parser.y"
-{;
-    break;}
-case 4:
-#line 50 "parser.y"
-{;
-    break;}
-case 5:
 #line 51 "parser.y"
 {;
     break;}
-case 6:
+case 2:
 #line 54 "parser.y"
 {;
     break;}
-case 7:
+case 3:
 #line 57 "parser.y"
 {;
     break;}
+case 4:
+#line 58 "parser.y"
+{;
+    break;}
+case 5:
+#line 61 "parser.y"
+{ add_variable(yyvsp[-1].identifier, yyvsp[-2].cap) ;
+    break;}
+case 6:
+#line 64 "parser.y"
+{printf("declare the body");
+    break;}
+case 7:
+#line 67 "parser.y"
+{;
+    break;}
 case 8:
-#line 60 "parser.y"
+#line 68 "parser.y"
 {;
     break;}
 case 9:
-#line 61 "parser.y"
+#line 71 "parser.y"
 {;
     break;}
 case 10:
-#line 62 "parser.y"
-{;
-    break;}
-case 11:
-#line 63 "parser.y"
-{;
-    break;}
-case 12:
-#line 66 "parser.y"
-{;
-    break;}
-case 13:
-#line 69 "parser.y"
-{;
-    break;}
-case 14:
 #line 72 "parser.y"
 {;
     break;}
-case 15:
-#line 75 "parser.y"
+case 11:
+#line 73 "parser.y"
 {;
     break;}
-case 16:
-#line 76 "parser.y"
+case 12:
+#line 74 "parser.y"
 {;
     break;}
-case 17:
+case 13:
 #line 77 "parser.y"
 {;
     break;}
+case 14:
+#line 80 "parser.y"
+{;
+    break;}
+case 15:
+#line 83 "parser.y"
+{;
+    break;}
+case 16:
+#line 86 "parser.y"
+{;
+    break;}
+case 17:
+#line 87 "parser.y"
+{;
+    break;}
 case 18:
-#line 78 "parser.y"
+#line 88 "parser.y"
 {;
     break;}
 case 19:
-#line 81 "parser.y"
+#line 89 "parser.y"
 {;
     break;}
 case 20:
-#line 84 "parser.y"
+#line 92 "parser.y"
 {;
     break;}
 case 21:
-#line 85 "parser.y"
+#line 95 "parser.y"
 {;
     break;}
 case 22:
-#line 88 "parser.y"
+#line 96 "parser.y"
 {;
+    break;}
+case 23:
+#line 99 "parser.y"
+{exit(EXIT_SUCCESS);;
     break;}
 }
 
@@ -1386,7 +1421,7 @@ YYLABEL(yyerrhandle)
 /* END */
 
  #line 1038 "/usr/share/bison++/bison.cc"
-#line 90 "parser.y"
+#line 101 "parser.y"
 
 
 extern FILE *yyin;
@@ -1397,7 +1432,59 @@ int main()
     while(!feof(yyin));
 }
 
-void yyerror(char *s)
+void add_variable(char *varName, const int size)
 {
-  fprintf(stderr, "%s\n", s);
+  remove_delimiter(varName);
+  if (!check_var_def(varName))
+  {
+    strcpy(identifierArray[arrayCounter], varName);
+    sizes[arrayCounter] = size;
+    arrayCounter++;
+    for (int i = 0; i < arrayCounter; i++) {
+     printf("%s \n", identifierArray[i]);
+   }
+
+  }
+  else if (check_var_def(varName))
+  {
+      printf("you bro you already declared this try again later my home slice");
+   }
+  else {
+    printf("error");
+  }
+}
+
+void remove_delimiter(char *variable)
+{
+  const unsigned int length = strlen(variable);
+
+  if((length > 0) && (variable[length-1] == '.'))
+  {
+    variable[length-1] = '\0';
+  }
+}
+
+bool check_var_def(char *identifer)
+{
+
+
+  for (int i = 0; i < arrayCounter; i++)
+  {
+      if(strcmp(identifer, identifierArray[i])==0)
+      {
+          printf("got %s \n",identifer);
+          return true;
+      }
+    }
+        return false;
+  }
+
+  void yyerror(char *s)
+  {
+    fprintf(stderr, "Error on line %d: %s\n", yylineno, s);
+  }
+
+void get_identifier(char *identifer){
+
+
 }

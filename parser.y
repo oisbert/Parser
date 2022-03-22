@@ -5,6 +5,7 @@
   #include <string.h>
   #include <stdlib.h>
   #include <stdbool.h>
+  #define MAX 60
 
   extern int yylex();
 	extern int yyparse();
@@ -13,7 +14,18 @@
   extern int yylex(void);
 
 
+
+  /* function declaration */
+  void add_variable(char *varName, const int size);
+  void remove_delimiter(char *variable);
   void yyerror(char *);
+  bool check_var_def(char *identifer);
+  void get_identifier(char *identifer);
+
+  /*public variables*/
+  char identifierArray[MAX][32];
+  int sizes[MAX];
+  int arrayCounter = 0;
 
 %}
 
@@ -26,35 +38,34 @@
 }
 
 /*specify the tokens needed*/
-%start beginning
+%start prog
 %token BODY BEGINNING TO END INPUT TERMINATE OTHER
 %token INTEGER
 %token ADD MOVE STRING
-%token IDENTIFIER
-%token CAPACITY
+%token <cap> CAPACITY
+%token <identifier> IDENTIFIER
 %token SEMICOLON
 %token INPUT OUTPUT
 
-%type <int> CAPACITY
-%type <identifier> IDENTIFIER
-
 %%
+prog:            beginning body end {}
+                    ;
 
-beginning:      BEGINNING TERMINATE  declaration {}
+beginning:      BEGINNING TERMINATE declaration {}
                 ;
 
-declaration:    declaration declare {}
+declaration:    declare declaration {}
                 | {}
                 ;
 
-declare:        CAPACITY IDENTIFIER TERMINATE {}
-                | {}
+declare:        CAPACITY IDENTIFIER TERMINATE { add_variable($2, $1) }
                 ;
 
-body:           BODY TERMINATE functions {}
+body:           BODY TERMINATE functions {printf("declare the body")}
                 ;
 
 functions:     functions function {}
+                | {}
                 ;
 
 function:       add {}
@@ -85,7 +96,7 @@ inputfunc:      IDENTIFIER TERMINATE {}
                 | IDENTIFIER SEMICOLON inputfunc {}
                 ;
 
-end:            END TERMINATE {}
+end:            END TERMINATE {exit(EXIT_SUCCESS);}
                 ;
 %%
 
@@ -97,7 +108,59 @@ int main()
     while(!feof(yyin));
 }
 
-void yyerror(char *s)
+void add_variable(char *varName, const int size)
 {
-  fprintf(stderr, "%s\n", s);
+  remove_delimiter(varName);
+  if (!check_var_def(varName))
+  {
+    strcpy(identifierArray[arrayCounter], varName);
+    sizes[arrayCounter] = size;
+    arrayCounter++;
+    for (int i = 0; i < arrayCounter; i++) {
+     printf("%s \n", identifierArray[i]);
+   }
+
+  }
+  else if (check_var_def(varName))
+  {
+      printf("you bro you already declared this try again later my home slice");
+   }
+  else {
+    printf("error");
+  }
+}
+
+void remove_delimiter(char *variable)
+{
+  const unsigned int length = strlen(variable);
+
+  if((length > 0) && (variable[length-1] == '.'))
+  {
+    variable[length-1] = '\0';
+  }
+}
+
+bool check_var_def(char *identifer)
+{
+
+
+  for (int i = 0; i < arrayCounter; i++)
+  {
+      if(strcmp(identifer, identifierArray[i])==0)
+      {
+          printf("got %s \n",identifer);
+          return true;
+      }
+    }
+        return false;
+  }
+
+  void yyerror(char *s)
+  {
+    fprintf(stderr, "Error on line %d: %s\n", yylineno, s);
+  }
+
+void get_identifier(char *identifer){
+
+
 }

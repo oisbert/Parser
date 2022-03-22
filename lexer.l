@@ -8,9 +8,10 @@
 %}
 
 %option noyywrap
+%option yylineno
 
 %%
-[\n\t ]+     						{}
+[\t ]+                  {}
 "BODY"								{printf("%s the user typed\n",yytext);return (BODY);}
 "BEGINNING"						{return (BEGINNING);}
 "TO"									{return (TO);}
@@ -19,6 +20,7 @@
 "ADD"									{return (ADD);}
 "INPUT"								{return (INPUT);}
 "PRINT"								{return (OUTPUT);}
+\n   									{}
 [xX]+									{yylval.cap=strlen(yytext); return (CAPACITY);}
 [A-Za-z][\-a-zA-Z0-9]*	{yylval.identifier = yytext; return (IDENTIFIER);}
 \.									{return (TERMINATE);}
