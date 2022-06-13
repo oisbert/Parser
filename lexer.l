@@ -9,11 +9,12 @@
 
 %option noyywrap
 %option yylineno
+%option caseless
 
 %%
 [\t ]+                  {}
-"BODY"								{printf("%s the user typed\n",yytext);return (BODY);}
-"BEGINNING"						{return (BEGINNING);}
+"BODY"								{return (BODY);}
+"BEGINING"						{return (BEGINING);}
 "TO"									{return (TO);}
 "END"									{return (END);}
 "MOVE"								{return (MOVE);}
@@ -23,7 +24,7 @@
 \n   									{}
 [xX]+									{yylval.cap=strlen(yytext); return (CAPACITY);}
 [A-Za-z][\-a-zA-Z0-9]*	{yylval.identifier = yytext; return (IDENTIFIER);}
-\.									{return (TERMINATE);}
+\.									{return (DELIMITER);}
 \"([^\\\"]|\\.)*\"		{return (STRING);}
 [0-9]+                {yylval.num=atoi(yytext); return (INTEGER); }
 ;											{return (SEMICOLON);}
