@@ -1,0 +1,22 @@
+BEGINING.
+
+XXX XY-1.
+
+XXXX Y.
+
+XX sY.
+
+X Z.
+
+BODY.
+
+PRINT "Please enter a number? ".
+
+INPUT Y.
+
+MOVE 155 TO Z.
+
+
+PRINT XY-1;" + ";Y;"=";Z.
+
+END.

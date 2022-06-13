@@ -1,0 +1,17 @@
+According to the spec the spelling beggining is begining
+
+This project uses the specs "begining" word;
+
+To compile the project:
+
+Ubuntu Linux:
+1. bison -d parser.y
+2. flex lexer.l
+3. cc parser.tab.c lex.yy.c -lm
+4. ./a.out "test.txt"
+
+Windows (Anaconda):
+1. bison -d parser.y
+2. flex lexer.l
+3. gcc parser.tab.c lex.yy.c -o parser -lm
+4. parser "tests.txt"

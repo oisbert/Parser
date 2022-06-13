@@ -1,0 +1,27 @@
+BEGINING.
+
+XXX XY-1.
+
+XXXX Y.
+
+XXXX Z.
+
+xxx oisin.
+
+xxx mc-n.
+
+xxx up-.
+
+xx down.
+
+BODY.
+
+PRINT "Do we go up or down <>;klds;f 32@*#*($)#$*#*&$)() ".
+
+INPUT Y.
+
+MOVE 01999 TO Z.
+
+
+PRINT Y;" + ";Y;"=";Z.
+END.
